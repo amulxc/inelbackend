@@ -2,15 +2,19 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from base.models import Category, Post, CareerForm, ContactInquiry, AftermarketForm
+from base.models import Category, Post, CareerForm, ContactInquiry, AftermarketForm, VehicleCategory, ProductType, Product
 from base.serializers import (
     CategorySerializer, PostSerializer, CareerFormSerializer,
-    ContactInquirySerializer, AftermarketFormSerializer
+    ContactInquirySerializer, AftermarketFormSerializer, VehicleCategorySerializer, ProductTypeSerializer, ProductSerializer
 )
 from .swagger import (
     category_list_schema, category_detail_schema,
     post_list_schema, post_detail_schema,
-    career_form_schema, contact_inquiry_schema, aftermarket_form_schema
+    career_form_schema, contact_inquiry_schema, aftermarket_form_schema,
+    vehicle_category_list_schema, vehicle_category_detail_schema,
+    product_type_list_schema, product_type_detail_schema,
+    product_list_schema, product_detail_schema, product_create_schema,
+    product_by_type_schema, product_by_category_schema
 )
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -116,4 +120,84 @@ class AftermarketFormViewSet(viewsets.ModelViewSet):
             {"message": "Aftermarket inquiry submitted successfully"},
             status=status.HTTP_201_CREATED,
             headers=headers
-        ) 
+        )
+
+class VehicleCategoryViewSet(viewsets.ModelViewSet):
+    queryset = VehicleCategory.objects.all()
+    serializer_class = VehicleCategorySerializer
+    permission_classes = [permissions.AllowAny]
+    
+    @vehicle_category_list_schema
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"vehicleCategories": serializer.data})
+    
+    @vehicle_category_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+class ProductTypeViewSet(viewsets.ModelViewSet):
+    queryset = ProductType.objects.all()
+    serializer_class = ProductTypeSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    @product_type_list_schema
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"productTypes": serializer.data})
+    
+    @product_type_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'id'
+    
+    @product_list_schema
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"products": serializer.data})
+    
+    @product_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @product_create_schema
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    @product_by_type_schema
+    @action(detail=False, methods=['get'])
+    def by_type(self, request):
+        type_id = request.query_params.get('type_id')
+        if not type_id:
+            return Response(
+                {"error": "type_id parameter is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        product_type = get_object_or_404(ProductType, id=type_id)
+        products = Product.objects.filter(type=product_type)
+        serializer = self.get_serializer(products, many=True)
+        return Response({"products": serializer.data})
+    
+    @product_by_category_schema
+    @action(detail=False, methods=['get'])
+    def by_category(self, request):
+        category_id = request.query_params.get('category_id')
+        if not category_id:
+            return Response(
+                {"error": "category_id parameter is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        category = get_object_or_404(VehicleCategory, id=category_id)
+        products = Product.objects.filter(vehicle_categories=category)
+        serializer = self.get_serializer(products, many=True)
+        return Response({"products": serializer.data}) 

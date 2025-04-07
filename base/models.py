@@ -8,7 +8,38 @@ from django.utils.text import slugify
 # Products
 ###########################################################################################################
 
+class VehicleCategory(models.Model):
+    name = models.CharField(max_length=100)
+    img = models.ImageField(upload_to='static/products/categories/')
+    short_name = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return self.name
 
+class ProductType(models.Model):
+    name = models.CharField(max_length=100)
+    img = models.ImageField(upload_to='static/products/types/')
+    
+    def __str__(self):
+        return self.name
+
+class Product(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=200)
+    type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
+    vehicle_categories = models.ManyToManyField(VehicleCategory)
+    image = models.ImageField(upload_to='static/products/')
+    
+    # Specifications stored as JSON
+    specifications = models.JSONField()
+    
+    # Features stored as JSON array
+    features = models.JSONField()
+    
+    description = models.TextField()
+    
+    def __str__(self):
+        return f"{self.name} ({self.id})"
 
 
 ############################################################################################################

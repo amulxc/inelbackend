@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Category, Post, CareerForm, ContactInquiry, AftermarketForm
+from .models import (
+    Category, Post, CareerForm, ContactInquiry, AftermarketForm,
+    VehicleCategory, ProductType, Product
+)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,5 +53,34 @@ class AftermarketFormSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'first_name', 'last_name', 'email', 'phone_number',
             'company_name', 'country', 'message'
-        ] 
+        ]
+
+class VehicleCategorySerializer(serializers.ModelSerializer):
+    shortName = serializers.CharField(source='short_name')
+    
+    class Meta:
+        model = VehicleCategory
+        fields = ['name', 'img', 'shortName']
+
+class ProductTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductType
+        fields = ['name', 'img']
+
+class ProductSerializer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+    vehicleCategories = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Product
+        fields = [
+            'id', 'name', 'type', 'vehicleCategories', 'image',
+            'specifications', 'features', 'description'
+        ]
+    
+    def get_type(self, obj):
+        return obj.type.name
+    
+    def get_vehicleCategories(self, obj):
+        return [category.name for category in obj.vehicle_categories.all()]
 
