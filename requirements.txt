@@ -1,3 +1,5 @@
 drf_yasg
 django-ckeditor
 django
+djangorestframework
+swagger-ui-py
