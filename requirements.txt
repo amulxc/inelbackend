@@ -4,3 +4,5 @@ django
 djangorestframework
 swagger-ui-py
 django-cors-headers
+django-jazzmin
+Pillow==10.2.0

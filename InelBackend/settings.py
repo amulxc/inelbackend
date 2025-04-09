@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',  # Should be before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -243,4 +244,170 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+# Jazzmin UI Customizer settings
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-dark",
+    "accent": "accent-primary",
+    "navbar": "navbar-dark elevation-4",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": True,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "darkly",
+    "dark_mode_theme": "darkly",
+    "button_classes": {
+        "primary": "btn-primary btn-flat",
+        "secondary": "btn-secondary btn-flat",
+        "info": "btn-info btn-flat",
+        "warning": "btn-warning btn-flat",
+        "danger": "btn-danger btn-flat",
+        "success": "btn-success btn-flat"
+    },
+    "actions_sticky_top": True,
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["auth", "base"],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "base.AftermarketForm": "fas fa-file-alt",
+        "base.ProductType": "fas fa-box",
+        "base.Product": "fas fa-boxes",
+        "base.Category": "fas fa-tags",
+        "base.SubCategory": "fas fa-tag",
+        "base.Contact": "fas fa-address-book",
+        "base.Newsletter": "fas fa-envelope",
+    },
+}
+
+# Jazzmin Settings
+JAZZMIN_SETTINGS = {
+    # title of the window
+    "site_title": "Inel Admin",
+
+    # Title on the brand (19 chars max)
+    "site_brand": "INEL ADMIN",
+
+    # Title on the login screen
+    "site_header": "Inel Technologies",
+
+    # CSS classes that are applied to the logo
+    "site_logo_classes": "img-circle",
+
+    # Welcome text on the login screen
+    "welcome_sign": "Welcome to Inel Admin Panel",
+
+    # Copyright on the footer
+    "copyright": "Inel Technologies Ltd",
+
+    # The model admin to search from the search bar
+    "search_model": ["auth.User", "base.AftermarketForm", "base.ProductType", "base.Product", "base.Category"],
+
+    # Field name on user model that contains avatar ImageField/URLField/Charfield
+    "user_avatar": None,
+
+    ############
+    # Top Menu #
+    ############
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"], "icon": "fas fa-tachometer-alt"},
+        {"name": "API Docs", "url": "/api/docs/", "new_window": True, "icon": "fas fa-book"},
+        {"name": "Support", "url": "mailto:support@inel.com", "icon": "fas fa-question-circle"},
+        {"model": "auth.User", "icon": "fas fa-users"},
+        {"app": "base", "icon": "fas fa-boxes"},
+    ],
+
+    #############
+    # Side Menu #
+    #############
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    
+    # Order of apps/models in the menu
+    "order_with_respect_to": ["auth", "base"],
+
+    # Custom icons for side menu apps/models
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "base.AftermarketForm": "fas fa-file-alt",
+        "base.ProductType": "fas fa-box",
+        "base.Product": "fas fa-boxes",
+        "base.Category": "fas fa-tags",
+        "base.SubCategory": "fas fa-tag",
+        "base.Contact": "fas fa-address-book",
+        "base.Newsletter": "fas fa-envelope",
+    },
+
+    # Icons that are used when one is not manually specified
+    "default_icon_parents": "fas fa-folder",
+    "default_icon_children": "fas fa-file",
+
+    #############
+    # UI Tweaks #
+    #############
+    "show_ui_builder": True,
+    "changeform_format": "horizontal_tabs",
+    "changeform_format_overrides": {
+        "auth.user": "collapsible",
+        "auth.group": "vertical_tabs",
+    },
+    
+    # Custom links to append to user menu
+    "usermenu_links": [
+        {
+            "name": "Support",
+            "url": "mailto:support@inel.com",
+            "icon": "fas fa-question-circle",
+        },
+        {
+            "name": "Documentation",
+            "url": "/api/docs/",
+            "icon": "fas fa-book",
+        },
+    ],
+
+    # Custom CSS
+    "custom_css": None,
+    "custom_js": None,
+    "use_google_fonts_cdn": True,
+
+    # Sidebar Menu Groups
+    "sidebar_menu_groups": [
+        {
+            "name": "User Management",
+            "icon": "fas fa-users",
+            "models": ["auth.User", "auth.Group"]
+        },
+        {
+            "name": "Product Management",
+            "icon": "fas fa-boxes",
+            "models": ["base.ProductType", "base.Product", "base.Category", "base.SubCategory"]
+        },
+        {
+            "name": "Forms & Communication",
+            "icon": "fas fa-file-alt",
+            "models": ["base.AftermarketForm", "base.Contact", "base.Newsletter"]
+        }
+    ]
+}
 
