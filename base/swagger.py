@@ -161,6 +161,119 @@ career_form_schema = swagger_auto_schema(
     }
 )
 
+# Career form CRUD operations
+career_form_list_schema = swagger_auto_schema(
+    operation_description="List all career applications",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="List of career applications",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'count': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'next': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'previous': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'results': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                                'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                                'email': openapi.Schema(type=openapi.TYPE_STRING),
+                                'phone_number': openapi.Schema(type=openapi.TYPE_STRING),
+                                'application_type': openapi.Schema(type=openapi.TYPE_STRING),
+                                'role_applied_for': openapi.Schema(type=openapi.TYPE_STRING),
+                                'current_location': openapi.Schema(type=openapi.TYPE_STRING),
+                                'resume': openapi.Schema(type=openapi.TYPE_STRING),
+                                'message': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                                'agreed_to_terms': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                            }
+                        )
+                    )
+                }
+            )
+        )
+    }
+)
+
+career_form_detail_schema = swagger_auto_schema(
+    operation_description="Get a specific career application",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Career application details",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING),
+                    'application_type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'role_applied_for': openapi.Schema(type=openapi.TYPE_STRING),
+                    'current_location': openapi.Schema(type=openapi.TYPE_STRING),
+                    'resume': openapi.Schema(type=openapi.TYPE_STRING),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'agreed_to_terms': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                }
+            )
+        ),
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+career_form_update_schema = swagger_auto_schema(
+    operation_description="Update a career application",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'first_name': openapi.Schema(type=openapi.TYPE_STRING, description='First name of the applicant'),
+            'last_name': openapi.Schema(type=openapi.TYPE_STRING, description='Last name of the applicant'),
+            'email': openapi.Schema(type=openapi.TYPE_STRING, format='email', description='Email address'),
+            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, description='Phone number'),
+            'application_type': openapi.Schema(type=openapi.TYPE_STRING, description='Type of application'),
+            'role_applied_for': openapi.Schema(type=openapi.TYPE_STRING, description='Role being applied for'),
+            'current_location': openapi.Schema(type=openapi.TYPE_STRING, description='Current location'),
+            'resume': openapi.Schema(type=openapi.TYPE_FILE, description='Resume file'),
+            'message': openapi.Schema(type=openapi.TYPE_STRING, description='Additional message'),
+            'agreed_to_terms': openapi.Schema(type=openapi.TYPE_BOOLEAN, description='Agreement to terms and conditions')
+        }
+    ),
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Updated career application",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING),
+                    'application_type': openapi.Schema(type=openapi.TYPE_STRING),
+                    'role_applied_for': openapi.Schema(type=openapi.TYPE_STRING),
+                    'current_location': openapi.Schema(type=openapi.TYPE_STRING),
+                    'resume': openapi.Schema(type=openapi.TYPE_STRING),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'agreed_to_terms': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+                }
+            )
+        ),
+        status.HTTP_400_BAD_REQUEST: error_response,
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+career_form_delete_schema = swagger_auto_schema(
+    operation_description="Delete a career application",
+    responses={
+        status.HTTP_204_NO_CONTENT: openapi.Response(description="Career application deleted successfully"),
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
 contact_inquiry_schema = swagger_auto_schema(
     operation_description="Submit a contact inquiry",
     request_body=openapi.Schema(
@@ -176,6 +289,95 @@ contact_inquiry_schema = swagger_auto_schema(
     responses={
         status.HTTP_201_CREATED: success_response,
         status.HTTP_400_BAD_REQUEST: error_response
+    }
+)
+
+# Contact inquiry CRUD operations
+contact_inquiry_list_schema = swagger_auto_schema(
+    operation_description="List all contact inquiries",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="List of contact inquiries",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'count': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'next': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'previous': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'results': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                'name': openapi.Schema(type=openapi.TYPE_STRING),
+                                'email': openapi.Schema(type=openapi.TYPE_STRING),
+                                'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                                'message': openapi.Schema(type=openapi.TYPE_STRING),
+                            }
+                        )
+                    )
+                }
+            )
+        )
+    }
+)
+
+contact_inquiry_detail_schema = swagger_auto_schema(
+    operation_description="Get a specific contact inquiry",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Contact inquiry details",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING),
+                }
+            )
+        ),
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+contact_inquiry_update_schema = swagger_auto_schema(
+    operation_description="Update a contact inquiry",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'name': openapi.Schema(type=openapi.TYPE_STRING, description='Name of the inquirer'),
+            'email': openapi.Schema(type=openapi.TYPE_STRING, format='email', description='Email address'),
+            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, description='Phone number (optional)'),
+            'message': openapi.Schema(type=openapi.TYPE_STRING, description='Inquiry message')
+        }
+    ),
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Updated contact inquiry",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING),
+                }
+            )
+        ),
+        status.HTTP_400_BAD_REQUEST: error_response,
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+contact_inquiry_delete_schema = swagger_auto_schema(
+    operation_description="Delete a contact inquiry",
+    responses={
+        status.HTTP_204_NO_CONTENT: openapi.Response(description="Contact inquiry deleted successfully"),
+        status.HTTP_404_NOT_FOUND: error_response
     }
 )
 
@@ -197,6 +399,107 @@ aftermarket_form_schema = swagger_auto_schema(
     responses={
         status.HTTP_201_CREATED: success_response,
         status.HTTP_400_BAD_REQUEST: error_response
+    }
+)
+
+# Aftermarket form CRUD operations
+aftermarket_form_list_schema = swagger_auto_schema(
+    operation_description="List all aftermarket inquiries",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="List of aftermarket inquiries",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'count': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'next': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'previous': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'results': openapi.Schema(
+                        type=openapi.TYPE_ARRAY,
+                        items=openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                                'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                                'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                                'email': openapi.Schema(type=openapi.TYPE_STRING),
+                                'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                                'company_name': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                                'country': openapi.Schema(type=openapi.TYPE_STRING),
+                                'message': openapi.Schema(type=openapi.TYPE_STRING),
+                            }
+                        )
+                    )
+                }
+            )
+        )
+    }
+)
+
+aftermarket_form_detail_schema = swagger_auto_schema(
+    operation_description="Get a specific aftermarket inquiry",
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Aftermarket inquiry details",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'company_name': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'country': openapi.Schema(type=openapi.TYPE_STRING),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING),
+                }
+            )
+        ),
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+aftermarket_form_update_schema = swagger_auto_schema(
+    operation_description="Update an aftermarket inquiry",
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'first_name': openapi.Schema(type=openapi.TYPE_STRING, description='First name'),
+            'last_name': openapi.Schema(type=openapi.TYPE_STRING, description='Last name'),
+            'email': openapi.Schema(type=openapi.TYPE_STRING, format='email', description='Email address'),
+            'phone_number': openapi.Schema(type=openapi.TYPE_STRING, description='Phone number (optional)'),
+            'company_name': openapi.Schema(type=openapi.TYPE_STRING, description='Company name (optional)'),
+            'country': openapi.Schema(type=openapi.TYPE_STRING, description='Country'),
+            'message': openapi.Schema(type=openapi.TYPE_STRING, description='Inquiry message')
+        }
+    ),
+    responses={
+        status.HTTP_200_OK: openapi.Response(
+            description="Updated aftermarket inquiry",
+            schema=openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'id': openapi.Schema(type=openapi.TYPE_INTEGER),
+                    'first_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'last_name': openapi.Schema(type=openapi.TYPE_STRING),
+                    'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    'phone_number': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'company_name': openapi.Schema(type=openapi.TYPE_STRING, nullable=True),
+                    'country': openapi.Schema(type=openapi.TYPE_STRING),
+                    'message': openapi.Schema(type=openapi.TYPE_STRING),
+                }
+            )
+        ),
+        status.HTTP_400_BAD_REQUEST: error_response,
+        status.HTTP_404_NOT_FOUND: error_response
+    }
+)
+
+aftermarket_form_delete_schema = swagger_auto_schema(
+    operation_description="Delete an aftermarket inquiry",
+    responses={
+        status.HTTP_204_NO_CONTENT: openapi.Response(description="Aftermarket inquiry deleted successfully"),
+        status.HTTP_404_NOT_FOUND: error_response
     }
 )
 

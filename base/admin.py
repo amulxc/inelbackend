@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import Category, Post, CareerForm, ContactInquiry, AftermarketForm
+from .models import (
+    Category, Post, CareerForm, ContactInquiry, AftermarketForm,
+    VehicleCategory, ProductType, Product
+)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -33,28 +36,31 @@ class CareerFormAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'role_applied_for', 'application_type')
     list_filter = ('application_type', 'role_applied_for')
     search_fields = ('first_name', 'last_name', 'email', 'role_applied_for')
-    readonly_fields = ('first_name', 'last_name', 'email', 'phone_number', 'application_type', 
-                      'role_applied_for', 'current_location', 'resume', 'message', 'agreed_to_terms')
-    
-    def has_add_permission(self, request):
-        return False  # Disable adding from admin
 
 @admin.register(ContactInquiry)
 class ContactInquiryAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'phone_number')
     search_fields = ('name', 'email', 'message')
-    readonly_fields = ('name', 'email', 'phone_number', 'message')
-    
-    def has_add_permission(self, request):
-        return False  # Disable adding from admin
 
 @admin.register(AftermarketForm)
 class AftermarketFormAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'company_name', 'country')
     list_filter = ('country',)
     search_fields = ('first_name', 'last_name', 'email', 'company_name', 'country', 'message')
-    readonly_fields = ('first_name', 'last_name', 'email', 'phone_number', 'company_name', 
-                      'country', 'message')
-    
-    def has_add_permission(self, request):
-        return False  # Disable adding from admin
+
+@admin.register(VehicleCategory)
+class VehicleCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'short_name')
+    search_fields = ('name', 'short_name')
+
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'type')
+    list_filter = ('type', 'vehicle_categories')
+    search_fields = ('id', 'name', 'description')
+    filter_horizontal = ('vehicle_categories',)

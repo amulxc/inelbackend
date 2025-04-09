@@ -205,6 +205,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net",
 ]
 
+# Disable automatic slash appending
+APPEND_SLASH = False
+
 # Site URL for Swagger
 SITE_URL = "https://inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net"
 
@@ -230,5 +233,14 @@ CORS_ALLOW_HEADERS = [
     'access-control-allow-origin',
     'access-control-allow-headers',
     'access-control-allow-methods',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
 ]
 

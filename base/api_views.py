@@ -14,7 +14,10 @@ from .swagger import (
     vehicle_category_list_schema, vehicle_category_detail_schema,
     product_type_list_schema, product_type_detail_schema,
     product_list_schema, product_detail_schema, product_create_schema,
-    product_by_type_schema, product_by_category_schema
+    product_by_type_schema, product_by_category_schema,
+    career_form_list_schema, career_form_detail_schema, career_form_update_schema, career_form_delete_schema,
+    contact_inquiry_list_schema, contact_inquiry_detail_schema, contact_inquiry_update_schema, contact_inquiry_delete_schema,
+    aftermarket_form_list_schema, aftermarket_form_detail_schema, aftermarket_form_update_schema, aftermarket_form_delete_schema
 )
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -71,7 +74,6 @@ class PostViewSet(viewsets.ModelViewSet):
 class CareerFormViewSet(viewsets.ModelViewSet):
     queryset = CareerForm.objects.all()
     serializer_class = CareerFormSerializer
-    http_method_names = ['get', 'post']  # Only allow GET and POST methods
     permission_classes = [permissions.AllowAny]
     
     @career_form_schema
@@ -85,11 +87,30 @@ class CareerFormViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+    
+    @career_form_list_schema
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @career_form_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @career_form_update_schema
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @career_form_update_schema
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @career_form_delete_schema
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class ContactInquiryViewSet(viewsets.ModelViewSet):
     queryset = ContactInquiry.objects.all()
     serializer_class = ContactInquirySerializer
-    http_method_names = ['get', 'post']  # Only allow GET and POST methods
     permission_classes = [permissions.AllowAny]
     
     @contact_inquiry_schema
@@ -103,11 +124,30 @@ class ContactInquiryViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+    
+    @contact_inquiry_list_schema
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @contact_inquiry_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @contact_inquiry_update_schema
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @contact_inquiry_update_schema
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @contact_inquiry_delete_schema
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class AftermarketFormViewSet(viewsets.ModelViewSet):
     queryset = AftermarketForm.objects.all()
     serializer_class = AftermarketFormSerializer
-    http_method_names = ['get', 'post']  # Only allow GET and POST methods
     permission_classes = [permissions.AllowAny]
     
     @aftermarket_form_schema
@@ -121,6 +161,26 @@ class AftermarketFormViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+    
+    @aftermarket_form_list_schema
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @aftermarket_form_detail_schema
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @aftermarket_form_update_schema
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @aftermarket_form_update_schema
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+    
+    @aftermarket_form_delete_schema
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
 
 class VehicleCategoryViewSet(viewsets.ModelViewSet):
     queryset = VehicleCategory.objects.all()
