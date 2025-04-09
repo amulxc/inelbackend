@@ -3,3 +3,4 @@ django-ckeditor
 django
 djangorestframework
 swagger-ui-py
+django-cors-headers
