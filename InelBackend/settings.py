@@ -157,6 +157,27 @@ SWAGGER_SETTINGS = {
     },
     'USE_SESSION_AUTH': True,
     'JSON_EDITOR': True,
+    'SUPPORTED_SUBMIT_METHODS': [
+        'get',
+        'post',
+        'put',
+        'delete',
+        'patch',
+        'head',
+        'options',
+        'trace'
+    ],
+    'OPERATIONS_SORTER': 'alpha',
+    'TAGS_SORTER': 'alpha',
+    'DOC_EXPANSION': 'none',
+    'DEFAULT_MODEL_RENDERING': 'example',
+    'DEFAULT_INFO': {
+        'title': 'InelBackend API',
+        'version': '1.0',
+    },
+    'PERSIST_AUTH': True,
+    'REFETCH_SCHEMA_WITH_AUTH': True,
+    'REFETCH_SCHEMA_ON_LOGOUT': True,
 }
 
 # CKEditor settings
@@ -184,6 +205,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net",
 ]
 
+# Site URL for Swagger
+SITE_URL = "https://inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net"
+
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
@@ -191,14 +215,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net",
 ]
 
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
+# Additional CORS settings for Swagger
+CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins (for development)
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -209,5 +227,8 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'access-control-allow-origin',
+    'access-control-allow-headers',
+    'access-control-allow-methods',
 ]
 
