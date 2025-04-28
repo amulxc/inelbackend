@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (
     Category, Post, CareerForm, ContactInquiry, AftermarketForm,
-    VehicleCategory, ProductType, Product
+    VehicleCategory, ProductType, Product, FeatureImage, Newsletter, Policy
 )
 
 @admin.register(Category)
@@ -58,9 +58,48 @@ class ProductTypeAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
+class FeatureImageInline(admin.TabularInline):
+    model = FeatureImage
+    extra = 1
+    fields = ('feature_name', 'image', 'description')
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'type')
+    list_display = ('id', 'name', 'type', 'pdf_file')
     list_filter = ('type', 'vehicle_categories')
     search_fields = ('id', 'name', 'description')
     filter_horizontal = ('vehicle_categories',)
+    inlines = [FeatureImageInline]
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('id', 'name', 'type', 'vehicle_categories')
+        }),
+        ('Media Files', {
+            'fields': ('image', 'graph_image', 'pdf_file'),
+            'description': 'Upload product images to static/products/images/, graphs to static/products/graphs/, and PDFs to static/products/pdfs/'
+        }),
+        ('Details', {
+            'fields': ('specifications', 'description')
+        }),
+    )
+
+@admin.register(FeatureImage)
+class FeatureImageAdmin(admin.ModelAdmin):
+    list_display = ('product', 'feature_name', 'image')
+    list_filter = ('product',)
+    search_fields = ('product__name', 'feature_name', 'description')
+    raw_id_fields = ('product',)
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', 'date_subscribed')
+    search_fields = ('email',)
+    readonly_fields = ('date_subscribed',)
+    ordering = ('-date_subscribed',)
+
+@admin.register(Policy)
+class PolicyAdmin(admin.ModelAdmin):
+    list_display = ('pdf_title', 'date_added')
+    search_fields = ('pdf_title',)
+    readonly_fields = ('date_added',)
+    ordering = ('-date_added',)

@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 
 
 ###########################################################################################################
@@ -23,23 +24,39 @@ class ProductType(models.Model):
     def __str__(self):
         return self.name
 
+class FeatureImage(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='feature_images')
+    feature_name = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='static/products/features/')
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('product', 'feature_name')
+        ordering = ['feature_name']
+
+    def __str__(self):
+        return f"{self.feature_name} - {self.product.name}"
+
 class Product(models.Model):
     id = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=200)
     type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     vehicle_categories = models.ManyToManyField(VehicleCategory)
-    image = models.ImageField(upload_to='static/products/')
+    image = models.ImageField(upload_to='static/products/images/')
+    graph_image = models.ImageField(upload_to='static/products/graphs/', blank=True, null=True, help_text="Upload product graph or chart image")
+    pdf_file = models.FileField(upload_to='static/products/pdfs/', blank=True, null=True, help_text="Upload product PDF documentation")
     
     # Specifications stored as JSON
     specifications = models.JSONField()
-    
-    # Features stored as JSON array
-    features = models.JSONField()
     
     description = models.TextField()
     
     def __str__(self):
         return f"{self.name} ({self.id})"
+
+    def get_features(self):
+        """Helper method to get all features for this product"""
+        return self.feature_images.all()
 
 
 ############################################################################################################
@@ -129,3 +146,18 @@ class AftermarketForm(models.Model):
 
     def __str__(self):
         return f"Aftermarket Inquiry from {self.first_name} {self.last_name}"
+
+class Newsletter(models.Model):
+    email = models.EmailField(unique=True)
+    date_subscribed = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+class Policy(models.Model):
+    pdf_title = models.CharField(max_length=200)
+    pdf_file = models.FileField(upload_to='static/policies/')
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.pdf_title

@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
     Category, Post, CareerForm, ContactInquiry, AftermarketForm,
-    VehicleCategory, ProductType, Product
+    VehicleCategory, ProductType, Product, FeatureImage, Newsletter, Policy
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -67,15 +67,23 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         model = ProductType
         fields = ['name', 'img']
 
+class FeatureImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeatureImage
+        fields = ['feature_name', 'image']
+
 class ProductSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     vehicleCategories = serializers.SerializerMethodField()
+    features = serializers.SerializerMethodField()
+    pdf = serializers.SerializerMethodField()
+    graph = serializers.SerializerMethodField()
     
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'type', 'vehicleCategories', 'image',
-            'specifications', 'features', 'description'
+            'graph', 'pdf', 'specifications', 'features', 'description'
         ]
     
     def get_type(self, obj):
@@ -83,4 +91,34 @@ class ProductSerializer(serializers.ModelSerializer):
     
     def get_vehicleCategories(self, obj):
         return [category.name for category in obj.vehicle_categories.all()]
+    
+    def get_features(self, obj):
+        feature_images = obj.feature_images.all()
+        features_dict = {}
+        for feature in feature_images:
+            features_dict[feature.feature_name] = feature.image.url if feature.image else None
+        return features_dict
+    
+    def get_pdf(self, obj):
+        return obj.pdf_file.url if obj.pdf_file else None
+    
+    def get_graph(self, obj):
+        return obj.graph_image.url if obj.graph_image else None
+
+class NewsletterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Newsletter
+        fields = ['email', 'date_subscribed']
+        read_only_fields = ['date_subscribed']
+
+class PolicySerializer(serializers.ModelSerializer):
+    pdf_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Policy
+        fields = ['id', 'pdf_title', 'pdf_url', 'date_added']
+        read_only_fields = ['date_added']
+    
+    def get_pdf_url(self, obj):
+        return obj.pdf_file.url if obj.pdf_file else None
 
