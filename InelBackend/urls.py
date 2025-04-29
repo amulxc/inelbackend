@@ -18,12 +18,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from base.api_urls import router
-from base.swagger_urls import urlpatterns as swagger_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/docs/', include(swagger_urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
 
