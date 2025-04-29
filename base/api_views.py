@@ -219,6 +219,11 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     lookup_field = 'id'
     
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
     @product_list_schema
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -283,6 +288,11 @@ class PolicyViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer
     permission_classes = [permissions.AllowAny]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

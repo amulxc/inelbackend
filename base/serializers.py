@@ -78,6 +78,7 @@ class ProductSerializer(serializers.ModelSerializer):
     features = serializers.SerializerMethodField()
     pdf = serializers.SerializerMethodField()
     graph = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     
     class Meta:
         model = Product
@@ -93,17 +94,33 @@ class ProductSerializer(serializers.ModelSerializer):
         return [category.name for category in obj.vehicle_categories.all()]
     
     def get_features(self, obj):
+        request = self.context.get('request')
         feature_images = obj.feature_images.all()
         features_dict = {}
         for feature in feature_images:
-            features_dict[feature.feature_name] = feature.image.url if feature.image else None
+            if feature.image:
+                features_dict[feature.feature_name] = request.build_absolute_uri(feature.image.url)
+            else:
+                features_dict[feature.feature_name] = None
         return features_dict
     
     def get_pdf(self, obj):
-        return obj.pdf_file.url if obj.pdf_file else None
+        request = self.context.get('request')
+        if obj.pdf_file:
+            return request.build_absolute_uri(obj.pdf_file.url)
+        return None
     
     def get_graph(self, obj):
-        return obj.graph_image.url if obj.graph_image else None
+        request = self.context.get('request')
+        if obj.graph_image:
+            return request.build_absolute_uri(obj.graph_image.url)
+        return None
+    
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
 class NewsletterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,5 +137,8 @@ class PolicySerializer(serializers.ModelSerializer):
         read_only_fields = ['date_added']
     
     def get_pdf_url(self, obj):
-        return obj.pdf_file.url if obj.pdf_file else None
+        request = self.context.get('request')
+        if obj.pdf_file:
+            return request.build_absolute_uri(obj.pdf_file.url)
+        return None
 
