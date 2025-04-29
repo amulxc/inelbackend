@@ -1,6 +1,10 @@
 from rest_framework.routers import DefaultRouter
-from django.urls import path, include
-from base import api_views
+from .api_views import (
+    CategoryViewSet, PostViewSet, CareerFormViewSet,
+    ContactInquiryViewSet, AftermarketFormViewSet,
+    VehicleCategoryViewSet, ProductTypeViewSet, ProductViewSet,
+    NewsletterViewSet, PolicyViewSet
+)
 
 # Create a custom router that doesn't generate nested routes
 class NoNestedRouter(DefaultRouter):
@@ -8,13 +12,15 @@ class NoNestedRouter(DefaultRouter):
         return []
 
 router = NoNestedRouter(trailing_slash=False)
-router.register(r'aftermarket', api_views.AftermarketFormViewSet, basename='aftermarket')
-router.register(r'categories', api_views.CategoryViewSet, basename='category')
-router.register(r'posts', api_views.PostViewSet, basename='post')
-router.register(r'career', api_views.CareerFormViewSet, basename='career')
-router.register(r'contact', api_views.ContactInquiryViewSet, basename='contact')
-router.register(r'vehicle-categories', api_views.VehicleCategoryViewSet, basename='vehicle-category')
-router.register(r'product-types', api_views.ProductTypeViewSet, basename='product-type')
-router.register(r'products', api_views.ProductViewSet, basename='product')
+router.register(r'categories', CategoryViewSet)
+router.register(r'posts', PostViewSet)
+router.register(r'career', CareerFormViewSet)
+router.register(r'contact', ContactInquiryViewSet)
+router.register(r'aftermarket', AftermarketFormViewSet)
+router.register(r'vehicle-categories', VehicleCategoryViewSet)
+router.register(r'product-types', ProductTypeViewSet)
+router.register(r'products', ProductViewSet)
+router.register(r'newsletter', NewsletterViewSet)
+router.register(r'policies', PolicyViewSet)
 
 app_name = 'api'

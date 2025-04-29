@@ -2,10 +2,11 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
-from base.models import Category, Post, CareerForm, ContactInquiry, AftermarketForm, VehicleCategory, ProductType, Product
+from base.models import Category, Post, CareerForm, ContactInquiry, AftermarketForm, VehicleCategory, ProductType, Product, Newsletter, Policy
 from base.serializers import (
     CategorySerializer, PostSerializer, CareerFormSerializer,
-    ContactInquirySerializer, AftermarketFormSerializer, VehicleCategorySerializer, ProductTypeSerializer, ProductSerializer
+    ContactInquirySerializer, AftermarketFormSerializer, VehicleCategorySerializer, ProductTypeSerializer, ProductSerializer,
+    NewsletterSerializer, PolicySerializer
 )
 from .swagger import (
     category_list_schema, category_detail_schema,
@@ -260,4 +261,30 @@ class ProductViewSet(viewsets.ModelViewSet):
         category = get_object_or_404(VehicleCategory, id=category_id)
         products = Product.objects.filter(vehicle_categories=category)
         serializer = self.get_serializer(products, many=True)
-        return Response({"products": serializer.data}) 
+        return Response({"products": serializer.data})
+
+class NewsletterViewSet(viewsets.ModelViewSet):
+    queryset = Newsletter.objects.all()
+    serializer_class = NewsletterSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {"message": "Successfully subscribed to newsletter"},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+class PolicyViewSet(viewsets.ModelViewSet):
+    queryset = Policy.objects.all()
+    serializer_class = PolicySerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({"policies": serializer.data}) 
