@@ -27,7 +27,7 @@ class ProductType(models.Model):
 class FeatureImage(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE, related_name='feature_images')
     feature_name = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='static/products/features/')
+    image = models.ImageField(blank=True, null=True, upload_to='static/products/features/')
     description = models.TextField(blank=True, null=True)
 
     class Meta:
