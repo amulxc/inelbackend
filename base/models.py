@@ -38,7 +38,7 @@ class FeatureImage(models.Model):
         return f"{self.feature_name} - {self.product.name}"
 
 class Product(models.Model):
-    id = models.CharField(max_length=10, primary_key=True)
+    id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=200)
     type = models.ForeignKey(ProductType, on_delete=models.CASCADE)
     vehicle_categories = models.ManyToManyField(VehicleCategory)
