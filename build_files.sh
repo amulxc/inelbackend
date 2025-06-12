@@ -19,4 +19,4 @@ $PYTHON_COMMAND -m pip install -r requirements.txt
 mkdir -p staticfiles_build
 
 # Move the static files into the output directory
-mv static staticfiles_build
+mv media staticfiles_build
