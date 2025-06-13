@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
     Category, Post, CareerForm, ContactInquiry, AftermarketForm,
-    VehicleCategory, ProductType, Product, FeatureImage, Newsletter, Policy
+    VehicleCategory, ProductType, Product, FeatureImage, Newsletter, Policy ,InvestorTabHeading,InvestorSubheading,InvestorSubheadingContent
 )
 
 class UserSerializer(serializers.ModelSerializer):
@@ -142,3 +142,38 @@ class PolicySerializer(serializers.ModelSerializer):
             return request.build_absolute_uri(obj.pdf_file.url)
         return None
 
+class InvestorSubheadingContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvestorSubheadingContent
+        fields = [
+            'id',
+            'title',
+            'pdf_name',
+            'link',
+            'editor_content',
+        ]
+
+
+class InvestorSubheadingSerializer(serializers.ModelSerializer):
+    contents = InvestorSubheadingContentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = InvestorSubheading
+        fields = [
+            'id',
+            'name',
+            'contents',
+        ]
+
+
+class InvestorTabHeadingSerializer(serializers.ModelSerializer):
+    subheadings = InvestorSubheadingSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = InvestorTabHeading
+        fields = [
+            'id',
+            'name',
+            'link',
+            'subheadings',
+        ]

@@ -1,8 +1,24 @@
 from django.contrib import admin
 from .models import (
-    Category, Post, CareerForm, ContactInquiry, AftermarketForm,
-    VehicleCategory, ProductType, Product, FeatureImage, Newsletter, Policy
+    # Blog
+    Category, Post,
+    
+    # Forms
+    CareerForm, ContactInquiry, AftermarketForm,
+    
+    # Products
+    VehicleCategory, ProductType, Product, FeatureImage,
+    
+    # Newsletter & Policies
+    Newsletter, Policy,
+
+    # Investor Section
+    InvestorTabHeading, InvestorSubheading, InvestorSubheadingContent
 )
+
+# -------------------------------
+# 📝 Blog Admin
+# -------------------------------
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -31,6 +47,10 @@ class PostAdmin(admin.ModelAdmin):
         }),
     )
 
+# -------------------------------
+# 📩 Form Submissions Admin
+# -------------------------------
+
 @admin.register(CareerForm)
 class CareerFormAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'role_applied_for', 'application_type')
@@ -47,6 +67,10 @@ class AftermarketFormAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'last_name', 'email', 'company_name', 'country')
     list_filter = ('country',)
     search_fields = ('first_name', 'last_name', 'email', 'company_name', 'country', 'message')
+
+# -------------------------------
+# 🚗 Products Admin
+# -------------------------------
 
 @admin.register(VehicleCategory)
 class VehicleCategoryAdmin(admin.ModelAdmin):
@@ -90,6 +114,10 @@ class FeatureImageAdmin(admin.ModelAdmin):
     search_fields = ('product__name', 'feature_name', 'description')
     raw_id_fields = ('product',)
 
+# -------------------------------
+# 📰 Newsletter & Policy Admin
+# -------------------------------
+
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     list_display = ('email', 'date_subscribed')
@@ -103,3 +131,23 @@ class PolicyAdmin(admin.ModelAdmin):
     search_fields = ('pdf_title',)
     readonly_fields = ('date_added',)
     ordering = ('-date_added',)
+
+# -------------------------------
+# 📊 Investor Section Admin
+# -------------------------------
+
+@admin.register(InvestorTabHeading)
+class InvestorTabHeadingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'link')
+    search_fields = ('name', 'link')
+
+@admin.register(InvestorSubheading)
+class InvestorSubheadingAdmin(admin.ModelAdmin):
+    list_display = ('tab_heading', 'name')
+    search_fields = ('tab_heading__name', 'name')
+
+@admin.register(InvestorSubheadingContent)
+class InvestorSubheadingContentAdmin(admin.ModelAdmin):
+    list_display = ('subheading', 'title', 'pdf_name', 'link')
+    search_fields = ('subheading__name', 'title', 'pdf_name', 'link')
+    raw_id_fields = ('subheading',)

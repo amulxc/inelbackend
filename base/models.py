@@ -161,3 +161,46 @@ class Policy(models.Model):
 
     def __str__(self):
         return self.pdf_title
+
+
+
+class InvestorTabHeading(models.Model):
+    name = models.CharField(max_length=255)
+    link = models.URLField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Investor Tab Heading"
+        verbose_name_plural = "Investor Tab Headings"
+
+    def __str__(self):
+        return self.name
+
+
+class InvestorSubheading(models.Model):
+    tab_heading = models.ForeignKey(InvestorTabHeading, on_delete=models.CASCADE, related_name='subheadings')
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        verbose_name = "Investor Subheading"
+        verbose_name_plural = "Investor Subheadings"
+
+    def __str__(self):
+        return f"{self.name} ({self.tab_heading.name})"
+
+
+class InvestorSubheadingContent(models.Model):
+
+    subheading = models.ForeignKey(InvestorSubheading, on_delete=models.CASCADE, related_name='contents')
+
+
+    title = models.CharField(max_length=255, blank=True, null=True)
+    pdf_name = models.CharField(max_length=255, blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    editor_content = RichTextUploadingField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Investor Subheading Content"
+        verbose_name_plural = "Investor Subheading Contents"
+
+    def __str__(self):
+        return self.title or self.pdf_name or "Investor Content"

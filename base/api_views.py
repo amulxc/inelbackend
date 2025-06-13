@@ -4,13 +4,13 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from base.models import (
     Category, Post, CareerForm, ContactInquiry, AftermarketForm,
-    VehicleCategory, ProductType, Product, Newsletter, Policy
+    VehicleCategory, ProductType, Product, Newsletter, Policy,InvestorTabHeading,InvestorSubheading,InvestorSubheadingContent
 )
 from base.serializers import (
     CategorySerializer, PostSerializer, CareerFormSerializer,
     ContactInquirySerializer, AftermarketFormSerializer,
     VehicleCategorySerializer, ProductTypeSerializer, ProductSerializer,
-    NewsletterSerializer, PolicySerializer
+    NewsletterSerializer, PolicySerializer,InvestorTabHeadingSerializer,InvestorSubheadingSerializer,InvestorSubheadingContentSerializer
 )
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -259,3 +259,25 @@ class PolicyViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset())
         serializer = self.get_serializer(queryset, many=True)
         return Response({"policies": serializer.data}) 
+    
+class InvestorViewSet(viewsets.ModelViewSet):
+    queryset = InvestorTabHeading.objects.all()
+    serializer_class = InvestorTabHeadingSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
