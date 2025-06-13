@@ -1,0 +1,234 @@
+/* Investor Content Admin Styles */
+
+/* Styling for the use_editor checkbox field */
+.field-use_editor {
+    background-color: #f8f9fa !important;
+    padding: 12px !important;
+    border-radius: 6px !important;
+    margin-bottom: 15px !important;
+    border: 1px solid #e3f2fd;
+    position: relative;
+}
+
+.field-use_editor::before {
+    content: "📝";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+}
+
+.field-use_editor .checkbox-row {
+    margin-left: 25px;
+}
+
+.field-use_editor label {
+    font-weight: 600 !important;
+    color: #1976d2 !important;
+    font-size: 14px;
+}
+
+.field-use_editor .help {
+    color: #666;
+    font-style: italic;
+    margin-top: 4px;
+}
+
+/* Hidden by default, shown when checkbox is checked */
+.field-editor_content {
+    transition: all 0.3s ease;
+    border: 2px dashed #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 10px;
+    background-color: #fafafa;
+}
+
+.field-editor_content.visible {
+    border-color: #4CAF50;
+    background-color: #f9fff9;
+}
+
+.field-editor_content label {
+    color: #2e7d32 !important;
+    font-weight: 600;
+}
+
+/* Inline formset styling */
+.inline-group {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.inline-group h2 {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 15px;
+    margin: 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.inline-group h2::before {
+    content: "📊";
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+/* Add button styling */
+.inline-group .add-row {
+    background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 10px 20px !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center;
+    margin: 15px 0 !important;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(76, 175, 80, 0.3);
+    transition: all 0.3s ease;
+}
+
+.inline-group .add-row::before {
+    content: "➕";
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.inline-group .add-row:hover {
+    background: linear-gradient(135deg, #45a049, #388e3c) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(76, 175, 80, 0.4);
+}
+
+/* Tabular inline styling */
+.inline-group table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.inline-group table thead th {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    padding: 12px 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.inline-group table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.inline-group table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.inline-group table tbody tr td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+/* Content count badge */
+.content-count-badge {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+    display: inline-block;
+}
+
+/* Editor content indicator */
+.has-content-yes {
+    color: #4CAF50 !important;
+    font-weight: bold;
+}
+
+.has-content-no {
+    color: #999 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .field-use_editor {
+        padding: 8px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .field-use_editor::before {
+        display: none;
+    }
+    
+    .field-use_editor .checkbox-row {
+        margin-left: 0;
+    }
+    
+    .inline-group .add-row {
+        padding: 8px 16px !important;
+        font-size: 14px;
+    }
+}
+
+/* Loading state for CK editor */
+.ckeditor-loading {
+    position: relative;
+}
+
+.ckeditor-loading::after {
+    content: "Loading editor...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-style: italic;
+    color: #666;
+}
+
+/* Animation for showing/hiding editor */
+.editor-hidden {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.editor-visible {
+    opacity: 1;
+    max-height: 1000px;
+    transition: all 0.3s ease;
+}
+
+/* Success message styling */
+.investor-success-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.investor-success-message::before {
+    content: "✅";
+    margin-right: 8px;
+    font-size: 16px;
+} 
