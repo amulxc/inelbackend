@@ -195,7 +195,7 @@ class InvestorSubheadingContent(models.Model):
 
     title = models.CharField(max_length=255, blank=True, null=True)
     pdf_name = models.CharField(max_length=255, blank=True, null=True)
-    link = models.URLField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True, max_length=500)
     editor_content = RichTextUploadingField(blank=True, null=True)
 
     class Meta:
