@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure--3@ver0_47s-#i8dm7(q(+js2=2$_!k5#3fh0^ny4*3vn-@8^z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net','localhost', '127.0.0.1', 'inelbackend.vercel.app']
+ALLOWED_HOSTS = ['inelbackend-fccmbmfjbhewhbhh.centralindia-01.azurewebsites.net','localhost', '127.0.0.1', 'inelbackend.vercel.app', '*']
 
 
 # Application definition
@@ -144,8 +144,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    'DEFAULT_PAGINATION_CLASS': None,
 }
 
 # Swagger settings
