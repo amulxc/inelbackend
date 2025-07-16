@@ -101,7 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
             'fields': ('id', 'name', 'type', 'vehicle_categories')
         }),
         ('Media Files', {
-            'fields': ('image', 'graph_image', 'pdf_file'),
+            'fields': ('image', 'graph_image', 'pdf_file', 'specifications_image'),
             'description': 'Upload product images to static/products/images/, graphs to static/products/graphs/, and PDFs to static/products/pdfs/'
         }),
         ('Details', {
