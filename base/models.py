@@ -45,6 +45,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='static/products/images/')
     graph_image = models.ImageField(upload_to='static/products/graphs/', blank=True, null=True, help_text="Upload product graph or chart image")
     pdf_file = models.FileField(upload_to='static/products/pdfs/', blank=True, null=True, help_text="Upload product PDF documentation")
+    specifications_image = models.ImageField(upload_to='static/products/extra/', blank=True, null=True, help_text="Optional extra image")
     
     # Specifications stored as JSON
     specifications = models.JSONField()
