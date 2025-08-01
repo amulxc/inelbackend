@@ -73,7 +73,7 @@ class FeatureImageSerializer(serializers.ModelSerializer):
         fields = ['feature_name', 'image']
 
 class ProductSerializer(serializers.ModelSerializer):
-    type = serializers.SerializerMethodField()
+    types = serializers.SerializerMethodField()
     vehicleCategories = serializers.SerializerMethodField()
     features = serializers.SerializerMethodField()
     pdf = serializers.SerializerMethodField()
@@ -83,12 +83,12 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = [
-            'id', 'name', 'type', 'vehicleCategories', 'image',
+            'id', 'name', 'types', 'vehicleCategories', 'image',
             'graph', 'pdf', 'specifications', 'features', 'description'
         ]
     
-    def get_type(self, obj):
-        return obj.type.name
+    def get_types(self, obj):
+        return [type_obj.name for type_obj in obj.types.all()]
     
     def get_vehicleCategories(self, obj):
         return [category.name for category in obj.vehicle_categories.all()]

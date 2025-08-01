@@ -203,15 +203,17 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'])
     def by_type(self, request):
-        type_id = request.query_params.get('type_id')
-        if not type_id:
+        type_ids = request.query_params.get('type_ids', '').split(',')
+        type_ids = [tid.strip() for tid in type_ids if tid.strip()]
+        
+        if not type_ids:
             return Response(
-                {"error": "type_id parameter is required"},
+                {"error": "type_ids parameter is required (comma-separated list)"},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        product_type = get_object_or_404(ProductType, id=type_id)
-        products = Product.objects.filter(type=product_type)
+        # Filter products that have ANY of the specified types
+        products = Product.objects.filter(types__id__in=type_ids).distinct()
         serializer = self.get_serializer(products, many=True)
         return Response({"products": serializer.data})
     

@@ -91,14 +91,18 @@ class FeatureImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'type', 'pdf_file')
-    list_filter = ('type', 'vehicle_categories')
+    list_display = ('id', 'name', 'get_types', 'pdf_file')
+    list_filter = ('types', 'vehicle_categories')
     search_fields = ('id', 'name', 'description')
-    filter_horizontal = ('vehicle_categories',)
+    filter_horizontal = ('types', 'vehicle_categories')
+
+    def get_types(self, obj):
+        return ", ".join([t.name for t in obj.types.all()])
+    get_types.short_description = 'Types'
     inlines = [FeatureImageInline]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('id', 'name', 'type', 'vehicle_categories')
+            'fields': ('id', 'name', 'types', 'vehicle_categories')
         }),
         ('Media Files', {
             'fields': ('image', 'graph_image', 'pdf_file', 'specifications_image'),
