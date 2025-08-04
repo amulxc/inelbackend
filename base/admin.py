@@ -102,7 +102,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [FeatureImageInline]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('id', 'name', 'types', 'vehicle_categories')
+            'fields': ('id', 'order', 'name', 'types', 'vehicle_categories')
         }),
         ('Media Files', {
             'fields': ('image', 'graph_image', 'pdf_file', 'specifications_image'),

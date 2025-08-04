@@ -60,12 +60,12 @@ class VehicleCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = VehicleCategory
-        fields = ['name', 'img', 'shortName']
+        fields = ['name', 'img', 'shortName', 'order']
 
 class ProductTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductType
-        fields = ['name', 'img']
+        fields = ['name', 'img', 'order']
 
 class FeatureImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -79,12 +79,13 @@ class ProductSerializer(serializers.ModelSerializer):
     pdf = serializers.SerializerMethodField()
     graph = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
+    order = serializers.IntegerField(read_only=True)
     
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'types', 'vehicleCategories', 'image',
-            'graph', 'pdf', 'specifications', 'features', 'description'
+            'graph', 'pdf', 'specifications', 'features', 'description', 'order'
         ]
     
     def get_types(self, obj):

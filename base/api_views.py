@@ -154,7 +154,7 @@ class AftermarketFormViewSet(viewsets.ModelViewSet):
         return super().destroy(request, *args, **kwargs)
 
 class VehicleCategoryViewSet(viewsets.ModelViewSet):
-    queryset = VehicleCategory.objects.all()
+    queryset = VehicleCategory.objects.all().order_by('order')
     serializer_class = VehicleCategorySerializer
     permission_classes = [permissions.AllowAny]
     
@@ -167,7 +167,7 @@ class VehicleCategoryViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
 class ProductTypeViewSet(viewsets.ModelViewSet):
-    queryset = ProductType.objects.all()
+    queryset = ProductType.objects.all().order_by('order')
     serializer_class = ProductTypeSerializer
     permission_classes = [permissions.AllowAny]
     
@@ -180,7 +180,7 @@ class ProductTypeViewSet(viewsets.ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().order_by('order')  # Order by order field      
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
     lookup_field = 'id'

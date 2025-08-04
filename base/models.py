@@ -13,6 +13,7 @@ class VehicleCategory(models.Model):
     name = models.CharField(max_length=100)
     img = models.ImageField(upload_to='static/products/categories/')
     short_name = models.CharField(max_length=10)
+    order = models.IntegerField(default=0)
     
     def __str__(self):
         return self.name
@@ -20,6 +21,7 @@ class VehicleCategory(models.Model):
 class ProductType(models.Model):
     name = models.CharField(max_length=100)
     img = models.ImageField(upload_to='static/products/types/')
+    order = models.IntegerField(default=0)
     
     def __str__(self):
         return self.name
@@ -46,6 +48,7 @@ class Product(models.Model):
     graph_image = models.ImageField(upload_to='static/products/graphs/', blank=True, null=True, help_text="Upload product graph or chart image")
     pdf_file = models.FileField(upload_to='static/products/pdfs/', blank=True, null=True, help_text="Upload product PDF documentation")
     specifications_image = models.ImageField(upload_to='static/products/extra/', blank=True, null=True, help_text="Optional extra image")
+    order = models.IntegerField(default=0)
     
     # Specifications stored as JSON
     specifications = models.JSONField()
