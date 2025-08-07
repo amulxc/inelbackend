@@ -12,6 +12,7 @@ from django.core.exceptions import ValidationError
 class VehicleCategory(models.Model):
     name = models.CharField(max_length=100)
     img = models.ImageField(upload_to='static/products/categories/')
+    app_img = models.ImageField(upload_to='static/products/categories/app/')
     short_name = models.CharField(max_length=10)
     order = models.IntegerField(default=0)
     

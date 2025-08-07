@@ -60,7 +60,7 @@ class VehicleCategorySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = VehicleCategory
-        fields = ['name', 'img', 'shortName', 'order']
+        fields = ['name', 'img', 'app_img', 'shortName', 'order']
 
 class ProductTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -92,7 +92,15 @@ class ProductSerializer(serializers.ModelSerializer):
         return [type_obj.name for type_obj in obj.types.all()]
     
     def get_vehicleCategories(self, obj):
-        return [category.name for category in obj.vehicle_categories.all()]
+        request = self.context.get('request')
+        vehicle_categories = obj.vehicle_categories.all()
+        vehicle_categories_dict = {}
+        for category in vehicle_categories:
+            if category.app_img:
+                vehicle_categories_dict[category.name] = request.build_absolute_uri(category.app_img.url)
+            else:
+                vehicle_categories_dict[category.name] = None
+        return vehicle_categories_dict
     
     def get_features(self, obj):
         request = self.context.get('request')
