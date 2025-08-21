@@ -50,6 +50,7 @@ class Product(models.Model):
     pdf_file = models.FileField(upload_to='static/products/pdfs/', blank=True, null=True, help_text="Upload product PDF documentation")
     specifications_image = models.ImageField(upload_to='static/products/extra/', blank=True, null=True, help_text="Optional extra image")
     order = models.IntegerField(default=0)
+    scooter_order = models.IntegerField(default=0, help_text="Specialized ordering for Scooter applications")
     
     # Specifications stored as JSON
     specifications = models.JSONField()

@@ -91,7 +91,7 @@ class FeatureImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'get_types', 'pdf_file')
+    list_display = ('id', 'name', 'get_types', 'scooter_order', 'order')
     list_filter = ('types', 'vehicle_categories')
     search_fields = ('id', 'name', 'description')
     filter_horizontal = ('types', 'vehicle_categories')
@@ -102,7 +102,7 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [FeatureImageInline]
     fieldsets = (
         ('Basic Information', {
-            'fields': ('id', 'order', 'name', 'types', 'vehicle_categories')
+            'fields': ('id', 'order', 'scooter_order', 'name', 'types', 'vehicle_categories')
         }),
         ('Media Files', {
             'fields': ('image', 'graph_image', 'pdf_file', 'specifications_image'),

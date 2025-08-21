@@ -192,6 +192,19 @@ class ProductViewSet(viewsets.ModelViewSet):
     
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+        
+        # Check if we should use scooter ordering
+        use_scooter_order = request.query_params.get('use_scooter_order', '').lower() == 'true'
+        
+        if use_scooter_order:
+            # Filter for Scooter applications and order by scooter_order
+            queryset = queryset.filter(
+                vehicle_categories__name__icontains='Scooter'
+            ).distinct().order_by('scooter_order', 'order')
+        else:
+            # Use default ordering
+            queryset = queryset.order_by('order')
+        
         serializer = self.get_serializer(queryset, many=True)
         return Response({"products": serializer.data})
     
@@ -230,6 +243,20 @@ class ProductViewSet(viewsets.ModelViewSet):
         products = Product.objects.filter(vehicle_categories=category)
         serializer = self.get_serializer(products, many=True)
         return Response({"products": serializer.data})
+    
+    @action(detail=False, methods=['get'])
+    def scooter_applications(self, request):
+        """
+        Get products that belong to Scooter vehicle category, ordered by scooter_order field.
+        This provides specialized ordering for Scooter applications while keeping existing order intact.
+        """
+        # Filter products that have 'Scooter' in their vehicle categories
+        products = Product.objects.filter(
+            vehicle_categories__name__icontains='Scooter'
+        ).distinct().order_by('scooter_order', 'order')
+        
+        serializer = self.get_serializer(products, many=True)
+        return Response({"scooter_products": serializer.data})
 
 class NewsletterViewSet(viewsets.ModelViewSet):
     queryset = Newsletter.objects.all()
