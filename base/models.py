@@ -43,7 +43,7 @@ class FeatureImage(models.Model):
 class Product(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=200)
-    types = models.ManyToManyField(ProductType, related_name='products')
+    types = models.ManyToManyField(ProductType, related_name='products',blank=True)
     vehicle_categories = models.ManyToManyField(VehicleCategory)
     image = models.ImageField(upload_to='static/products/images/')
     graph_image = models.ImageField(upload_to='static/products/graphs/', blank=True, null=True, help_text="Upload product graph or chart image")
