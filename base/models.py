@@ -185,10 +185,12 @@ class InvestorTabHeading(models.Model):
 class InvestorSubheading(models.Model):
     tab_heading = models.ForeignKey(InvestorTabHeading, on_delete=models.CASCADE, related_name='subheadings')
     name = models.CharField(max_length=255)
+    order = models.IntegerField(default=0)
 
     class Meta:
         verbose_name = "Investor Subheading"
         verbose_name_plural = "Investor Subheadings"
+        ordering = ['order']
 
     def __str__(self):
         return f"{self.name} ({self.tab_heading.name})"
@@ -197,7 +199,7 @@ class InvestorSubheading(models.Model):
 class InvestorSubheadingContent(models.Model):
 
     subheading = models.ForeignKey(InvestorSubheading, on_delete=models.CASCADE, related_name='contents')
-
+    order = models.IntegerField(default=0)
 
     title = models.CharField(max_length=255, blank=True, null=True)
     pdf_name = models.CharField(max_length=255, blank=True, null=True)
@@ -207,6 +209,7 @@ class InvestorSubheadingContent(models.Model):
     class Meta:
         verbose_name = "Investor Subheading Content"
         verbose_name_plural = "Investor Subheading Contents"
+        ordering = ['order']
 
     def __str__(self):
         return self.title or self.pdf_name or "Investor Content"

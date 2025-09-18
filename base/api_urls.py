@@ -3,7 +3,7 @@ from .api_views import (
     CategoryViewSet, PostViewSet, CareerFormViewSet,
     ContactInquiryViewSet, AftermarketFormViewSet,
     VehicleCategoryViewSet, ProductTypeViewSet, ProductViewSet,
-    NewsletterViewSet, PolicyViewSet ,InvestorViewSet
+    NewsletterViewSet, PolicyViewSet ,InvestorViewSet, InvestorSubheadingViewSet, InvestorSubheadingContentViewSet
 )
 
 # Create a custom router that doesn't generate nested routes
@@ -23,5 +23,7 @@ router.register(r'products', ProductViewSet)
 router.register(r'newsletter', NewsletterViewSet)
 router.register(r'policies', PolicyViewSet)
 router.register(r'investor', InvestorViewSet)
+router.register(r'investor-subheadings', InvestorSubheadingViewSet)
+router.register(r'investor-subheading-contents', InvestorSubheadingContentViewSet)
 
 app_name = 'api'

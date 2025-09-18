@@ -157,6 +157,7 @@ class InvestorSubheadingContentSerializer(serializers.ModelSerializer):
         model = InvestorSubheadingContent
         fields = [
             'id',
+            'order',
             'title',
             'pdf_name',
             'link',
@@ -166,14 +167,23 @@ class InvestorSubheadingContentSerializer(serializers.ModelSerializer):
 
 class InvestorSubheadingSerializer(serializers.ModelSerializer):
     contents = InvestorSubheadingContentSerializer(many=True, read_only=True)
+    tab_heading = serializers.SerializerMethodField()
 
     class Meta:
         model = InvestorSubheading
         fields = [
             'id',
             'name',
+            'order',
+            'tab_heading',
             'contents',
         ]
+    
+    def get_tab_heading(self, obj):
+        return {
+            'id': obj.tab_heading.id,
+            'name': obj.tab_heading.name
+        }
 
 
 class InvestorTabHeadingSerializer(serializers.ModelSerializer):

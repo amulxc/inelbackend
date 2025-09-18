@@ -310,3 +310,135 @@ class InvestorViewSet(viewsets.ModelViewSet):
     
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
+
+
+class InvestorSubheadingViewSet(viewsets.ModelViewSet):
+    queryset = InvestorSubheading.objects.all().order_by('order')
+    serializer_class = InvestorSubheadingSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @action(detail=False, methods=['post'])
+    def update_order(self, request):
+        """
+        Update the order of multiple InvestorSubheading items.
+        Expects a list of objects with 'id' and 'order' fields.
+        """
+        try:
+            order_data = request.data.get('order_data', [])
+            if not isinstance(order_data, list):
+                return Response(
+                    {"error": "order_data must be a list"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Update each item's order
+            for item_data in order_data:
+                item_id = item_data.get('id')
+                new_order = item_data.get('order')
+                
+                if item_id is None or new_order is None:
+                    return Response(
+                        {"error": "Each item must have 'id' and 'order' fields"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                try:
+                    subheading = InvestorSubheading.objects.get(id=item_id)
+                    subheading.order = new_order
+                    subheading.save()
+                except InvestorSubheading.DoesNotExist:
+                    return Response(
+                        {"error": f"InvestorSubheading with id {item_id} not found"},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+            
+            return Response({"message": "Order updated successfully"})
+            
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class InvestorSubheadingContentViewSet(viewsets.ModelViewSet):
+    queryset = InvestorSubheadingContent.objects.all().order_by('order')
+    serializer_class = InvestorSubheadingContentSerializer
+    permission_classes = [permissions.AllowAny]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
+    @action(detail=False, methods=['post'])
+    def update_order(self, request):
+        """
+        Update the order of multiple InvestorSubheadingContent items.
+        Expects a list of objects with 'id' and 'order' fields.
+        """
+        try:
+            order_data = request.data.get('order_data', [])
+            if not isinstance(order_data, list):
+                return Response(
+                    {"error": "order_data must be a list"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Update each item's order
+            for item_data in order_data:
+                item_id = item_data.get('id')
+                new_order = item_data.get('order')
+                
+                if item_id is None or new_order is None:
+                    return Response(
+                        {"error": "Each item must have 'id' and 'order' fields"},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                try:
+                    content = InvestorSubheadingContent.objects.get(id=item_id)
+                    content.order = new_order
+                    content.save()
+                except InvestorSubheadingContent.DoesNotExist:
+                    return Response(
+                        {"error": f"InvestorSubheadingContent with id {item_id} not found"},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+            
+            return Response({"message": "Content order updated successfully"})
+            
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

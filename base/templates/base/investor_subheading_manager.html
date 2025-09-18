@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Investor Subheading Manager</title>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #363;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #363;
+        }
+
+        .subheading-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .subheading-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            margin: 10px 0;
+            padding: 20px;
+            cursor: move;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .subheading-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .subheading-contents {
+            margin-left: 20px;
+            border-left: 3px solid #e9ecef;
+            padding-left: 15px;
+        }
+
+        .content-item {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin: 8px 0;
+            padding: 15px;
+            cursor: move;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .content-item.sortable-ghost {
+            opacity: 0.4;
+        }
+
+        .content-item.sortable-chosen {
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .content-info {
+            flex: 1;
+        }
+
+        .content-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .content-type {
+            font-size: 0.8rem;
+            color: #666;
+            background: #f8f9fa;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .content-order {
+            background: #28a745;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .save-content-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .save-content-btn:hover {
+            background: #218838;
+        }
+
+        .save-content-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .content-changed {
+            border-left-color: #ffc107 !important;
+        }
+
+        .content-unchanged {
+            border-left-color: #e9ecef;
+        }
+
+        .contents-hidden {
+            display: none;
+        }
+
+        .contents-visible {
+            display: block;
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .toggle-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-right: 15px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-slider:hover {
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .subheading-item.drag-disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .subheading-item.drag-disabled:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e9ecef;
+        }
+
+        .drag-handle.drag-disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .subheading-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .subheading-item.sortable-ghost {
+            opacity: 0.4;
+        }
+
+        .subheading-item.sortable-chosen {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .subheading-info {
+            flex: 1;
+        }
+
+        .subheading-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .subheading-tab {
+            font-size: 0.9rem;
+            color: #666;
+            background: #e9ecef;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .subheading-order {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .drag-handle {
+            color: #999;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            cursor: grab;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .controls {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .subheading-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .subheading-order {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Investor Content Manager</h1>
+            <p>Toggle subheading drag & drop, always manage content order</p>
+        </div>
+        
+        <div class="content">
+            <div id="loading" class="loading">
+                Loading investor subheadings...
+            </div>
+            
+            <div id="error" class="error" style="display: none;"></div>
+            <div id="success" class="success" style="display: none;"></div>
+            
+            <div id="stats" class="stats" style="display: none;">
+                <div class="stat">
+                    <div class="stat-number" id="total-count">0</div>
+                    <div class="stat-label">Total Subheadings</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="changed-count">0</div>
+                    <div class="stat-label">Changes Made</div>
+                </div>
+            </div>
+            
+            <div class="toggle-container">
+                <span class="toggle-label" id="toggle-label">Enable Subheading Drag & Drop:</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="drag-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="controls">
+                <button id="save-btn" class="btn" disabled>Save Order</button>
+                <button id="reset-btn" class="btn btn-secondary" disabled>Reset</button>
+            </div>
+            
+            <ul id="subheading-list" class="subheading-list" style="display: none;"></ul>
+        </div>
+    </div>
+
+    <script>
+        let originalOrder = [];
+        let currentOrder = [];
+        let hasChanges = false;
+        let sortable;
+        let contentChanges = {}; // Track changes for each subheading's contents
+        let dragEnabled = true; // Track drag and drop state
+        
+        // Get CSRF token from meta tag or cookie
+        function getCSRFToken() {
+            // Try to get from meta tag first
+            const metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                return metaTag.getAttribute('content');
+            }
+            
+            // Fallback to cookie
+            return getCookie('csrftoken');
+        }
+
+        // Load investor subheadings
+        async function loadSubheadings() {
+            try {
+                const response = await fetch('/api/investor-subheadings');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (Array.isArray(data)) {
+                    displaySubheadings(data);
+                    originalOrder = [...data];
+                    currentOrder = [...data];
+                    updateStats();
+                } else {
+                    throw new Error('Invalid data format received');
+                }
+            } catch (error) {
+                console.error('Error loading subheadings:', error);
+                showError('Failed to load investor subheadings: ' + error.message);
+            }
+        }
+
+        // Display subheadings in the UI
+        function displaySubheadings(subheadings) {
+            const list = document.getElementById('subheading-list');
+            const loading = document.getElementById('loading');
+            
+            list.innerHTML = '';
+            
+            subheadings.forEach((subheading, index) => {
+                const li = document.createElement('li');
+                li.className = 'subheading-item';
+                li.dataset.id = subheading.id;
+                
+                // Create contents HTML
+                const contentsHtml = subheading.contents && subheading.contents.length > 0 
+                    ? subheading.contents.map((content, contentIndex) => `
+                        <div class="content-item" data-id="${content.id}">
+                            <div class="drag-handle">⋮⋮</div>
+                            <div class="content-info">
+                                <div class="content-title">${content.title || content.pdf_name || 'Untitled Content'}</div>
+                                <div class="content-type">${content.title ? 'Title' : content.pdf_name ? 'PDF' : 'Content'}</div>
+                            </div>
+                            <div class="content-order">${contentIndex + 1}</div>
+                        </div>
+                    `).join('')
+                    : '<div style="color: #666; font-style: italic; padding: 10px;">No contents available</div>';
+                
+                li.innerHTML = `
+                    <div class="subheading-header">
+                        <div style="display: flex; align-items: center;">
+                            <div class="drag-handle">⋮⋮</div>
+                            <div class="subheading-info">
+                                <div class="subheading-name">${subheading.name}</div>
+                                <div class="subheading-tab">Tab: ${subheading.tab_heading ? subheading.tab_heading.name : 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <button class="expand-btn" onclick="toggleContents(${subheading.id})">
+                                <span id="expand-text-${subheading.id}">Show Contents</span>
+                            </button>
+                            <button class="save-content-btn" id="save-content-btn-${subheading.id}" onclick="saveContentOrder(${subheading.id})" disabled>
+                                Save Contents
+                            </button>
+                            <div class="subheading-order">${index + 1}</div>
+                        </div>
+                    </div>
+                    <div class="subheading-contents contents-hidden" id="contents-${subheading.id}">
+                        ${contentsHtml}
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+            
+            loading.style.display = 'none';
+            list.style.display = 'block';
+            document.getElementById('stats').style.display = 'flex';
+            
+            // Initialize content changes tracking
+            subheadings.forEach(subheading => {
+                contentChanges[subheading.id] = false;
+            });
+            
+            // Set initial visual state based on toggle
+            const toggle = document.getElementById('drag-toggle');
+            dragEnabled = toggle.checked;
+            
+            // Initialize sortable for subheadings
+            initializeSortable();
+            
+            // Apply initial visual state to subheading items
+            setTimeout(() => {
+                const subheadingItems = document.querySelectorAll('.subheading-item');
+                subheadingItems.forEach(item => {
+                    const dragHandle = item.querySelector('.drag-handle');
+                    
+                    if (!dragEnabled) {
+                        item.classList.add('drag-disabled');
+                        if (dragHandle) {
+                            dragHandle.classList.add('drag-disabled');
+                        }
+                    }
+                });
+            }, 100);
+        }
+
+        // Initialize drag and drop functionality
+        function initializeSortable() {
+            const list = document.getElementById('subheading-list');
+            
+            // Destroy existing sortable if it exists
+            if (sortable) {
+                sortable.destroy();
+            }
+            
+            if (dragEnabled) {
+                sortable = Sortable.create(list, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    onEnd: function(evt) {
+                        updateOrder();
+                        updateStats();
+                        checkForChanges();
+                    }
+                });
+            } else {
+                // Create a disabled sortable instance
+                sortable = Sortable.create(list, {
+                    disabled: true,
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen'
+                });
+            }
+        }
+
+        // Initialize content sortable for a specific subheading
+        function initializeContentSortable(subheadingId) {
+            const contentsContainer = document.getElementById(`contents-${subheadingId}`);
+            if (contentsContainer) {
+                Sortable.create(contentsContainer, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    chosenClass: 'sortable-chosen',
+                    onEnd: function(evt) {
+                        updateContentOrder(subheadingId);
+                    }
+                });
+            }
+        }
+
+        // Toggle contents visibility
+        function toggleContents(subheadingId) {
+            const contentsDiv = document.getElementById(`contents-${subheadingId}`);
+            const expandText = document.getElementById(`expand-text-${subheadingId}`);
+            
+            if (contentsDiv.classList.contains('contents-hidden')) {
+                contentsDiv.classList.remove('contents-hidden');
+                contentsDiv.classList.add('contents-visible');
+                expandText.textContent = 'Hide Contents';
+                
+                // Set initial visual state
+                contentsDiv.classList.add('content-unchanged');
+                
+                // Initialize sortable for contents if not already done
+                if (!contentsDiv.hasAttribute('data-sortable-initialized')) {
+                    initializeContentSortable(subheadingId);
+                    contentsDiv.setAttribute('data-sortable-initialized', 'true');
+                }
+            } else {
+                contentsDiv.classList.remove('contents-visible');
+                contentsDiv.classList.add('contents-hidden');
+                expandText.textContent = 'Show Contents';
+            }
+        }
+
+        // Update content order for a specific subheading
+        function updateContentOrder(subheadingId) {
+            const contentsContainer = document.getElementById(`contents-${subheadingId}`);
+            const contentItems = contentsContainer.querySelectorAll('.content-item');
+            
+            contentItems.forEach((item, index) => {
+                const orderElement = item.querySelector('.content-order');
+                orderElement.textContent = index + 1;
+            });
+            
+            // Mark this subheading as having changes
+            contentChanges[subheadingId] = true;
+            
+            // Enable save button for this subheading
+            const saveBtn = document.getElementById(`save-content-btn-${subheadingId}`);
+            if (saveBtn) {
+                saveBtn.disabled = false;
+            }
+            
+            // Update visual indicator
+            contentsContainer.classList.remove('content-unchanged');
+            contentsContainer.classList.add('content-changed');
+            
+            // Update statistics
+            updateStats();
+        }
+
+        // Save content order to the server
+        async function saveContentOrder(subheadingId) {
+            const contentsContainer = document.getElementById(`contents-${subheadingId}`);
+            const contentItems = contentsContainer.querySelectorAll('.content-item');
+            const saveBtn = document.getElementById(`save-content-btn-${subheadingId}`);
+            
+            // Disable button and show loading state
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving...';
+            }
+            
+            const orderData = Array.from(contentItems).map((item, index) => ({
+                id: parseInt(item.dataset.id),
+                order: index
+            }));
+            
+            try {
+                const response = await fetch('/api/investor-subheading-contents/update_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({ order_data: orderData })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to save content order');
+                }
+                
+                // Mark as saved
+                contentChanges[subheadingId] = false;
+                contentsContainer.classList.remove('content-changed');
+                contentsContainer.classList.add('content-unchanged');
+                
+                showSuccess(`Content order saved for ${getSubheadingName(subheadingId)}!`);
+                
+                // Update statistics
+                updateStats();
+                
+            } catch (error) {
+                console.error('Error saving content order:', error);
+                showError('Failed to save content order: ' + error.message);
+                
+                // Re-enable button on error
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                }
+            } finally {
+                // Reset button text
+                if (saveBtn) {
+                    saveBtn.textContent = 'Save Contents';
+                }
+            }
+        }
+
+        // Get subheading name for display
+        function getSubheadingName(subheadingId) {
+            const subheading = currentOrder.find(s => s.id === subheadingId);
+            return subheading ? subheading.name : 'Subheading';
+        }
+
+        // Toggle drag and drop functionality
+        function toggleDragDrop() {
+            const toggle = document.getElementById('drag-toggle');
+            const label = document.getElementById('toggle-label');
+            dragEnabled = toggle.checked;
+            
+            // Update label text
+            label.textContent = dragEnabled ? 'Enable Subheading Drag & Drop:' : 'Disable Subheading Drag & Drop:';
+            
+            // Update visual state of subheading items
+            const subheadingItems = document.querySelectorAll('.subheading-item');
+            subheadingItems.forEach(item => {
+                const dragHandle = item.querySelector('.drag-handle');
+                
+                if (dragEnabled) {
+                    item.classList.remove('drag-disabled');
+                    if (dragHandle) {
+                        dragHandle.classList.remove('drag-disabled');
+                    }
+                } else {
+                    item.classList.add('drag-disabled');
+                    if (dragHandle) {
+                        dragHandle.classList.add('drag-disabled');
+                    }
+                }
+            });
+            
+            // Reinitialize sortable with new state
+            initializeSortable();
+            
+            // Show feedback message
+            const message = dragEnabled ? 'Subheading drag & drop enabled' : 'Subheading drag & drop disabled';
+            showSuccess(message);
+        }
+
+        // Update the order numbers displayed
+        function updateOrder() {
+            const items = document.querySelectorAll('.subheading-item');
+            items.forEach((item, index) => {
+                const orderElement = item.querySelector('.subheading-order');
+                orderElement.textContent = index + 1;
+                
+                // Update current order array
+                const id = parseInt(item.dataset.id);
+                const subheading = currentOrder.find(s => s.id === id);
+                if (subheading) {
+                    subheading.order = index;
+                }
+            });
+        }
+
+        // Check if there are changes
+        function checkForChanges() {
+            hasChanges = JSON.stringify(originalOrder.map(s => s.id)) !== 
+                        JSON.stringify(currentOrder.map(s => s.id));
+            
+            document.getElementById('save-btn').disabled = !hasChanges;
+            document.getElementById('reset-btn').disabled = !hasChanges;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalSubheadings = currentOrder.length;
+            const totalContents = currentOrder.reduce((total, subheading) => {
+                return total + (subheading.contents ? subheading.contents.length : 0);
+            }, 0);
+            
+            const pendingContentChanges = Object.values(contentChanges).filter(changed => changed).length;
+            
+            document.getElementById('total-count').textContent = totalSubheadings;
+            document.getElementById('changed-count').textContent = hasChanges ? '1' : '0';
+            
+            // Update the stat label to show both subheadings and contents
+            const statLabel = document.querySelector('.stat-label');
+            if (statLabel) {
+                let labelText = `Subheadings (${totalContents} contents)`;
+                if (pendingContentChanges > 0) {
+                    labelText += ` - ${pendingContentChanges} content changes pending`;
+                }
+                statLabel.textContent = labelText;
+            }
+        }
+
+        // Save the new order
+        async function saveOrder() {
+            if (!hasChanges) return;
+            
+            const saveBtn = document.getElementById('save-btn');
+            const originalText = saveBtn.textContent;
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                const orderData = currentOrder.map((subheading, index) => ({
+                    id: subheading.id,
+                    order: index
+                }));
+                
+                const response = await fetch('/api/investor-subheadings/update_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCSRFToken()
+                    },
+                    body: JSON.stringify({ order_data: orderData })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to save order');
+                }
+                
+                showSuccess('Order saved successfully!');
+                originalOrder = [...currentOrder];
+                hasChanges = false;
+                checkForChanges();
+                updateStats();
+                
+            } catch (error) {
+                console.error('Error saving order:', error);
+                showError('Failed to save order: ' + error.message);
+            } finally {
+                saveBtn.textContent = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+
+        // Reset to original order
+        function resetOrder() {
+            if (!hasChanges) return;
+            
+            currentOrder = [...originalOrder];
+            displaySubheadings(currentOrder);
+            hasChanges = false;
+            checkForChanges();
+            updateStats();
+            showSuccess('Order reset to original');
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Get CSRF token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Event listeners
+        document.getElementById('save-btn').addEventListener('click', saveOrder);
+        document.getElementById('reset-btn').addEventListener('click', resetOrder);
+        document.getElementById('drag-toggle').addEventListener('change', toggleDragDrop);
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadSubheadings);
+    </script>
+</body>
+</html>
